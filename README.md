@@ -25,6 +25,18 @@ Las reglas completas de uso del agente están en [`CLAUDE.md`](./CLAUDE.md).
 - Git
 - Claude Code (opcional, para asistencia con el agente)
 
+## [Requisitos Funcionales](Analisis/ReglasDeNegocio.md)
+
+Esta lista de requisitos funcionales nos ayudará a definir las funcionalidades del sistema.
+
+## [Requisitos No Funcionales](Analisis/ReglasDeNegocio.md)
+
+Los siguientes requisitos son criterios de calidad de producto seleccionados para el alcance académico. Se distinguen interacción/usabilidad, seguridad, mantenibilidad, fiabilidad y desempeño. Los umbrales operativos son metas didácticas propuestas, no valores prescritos por ISO/IEC 25010:2023.
+
+## [Reglas De Negocio](Analisis/ReglasDeNegocio.md)
+
+Las reglas de negocio son los principios, condiciones, restricciones y políticas operativas que definen cómo debe funcionar una organización o proceso, independientemente de la tecnología que se utilice.
+
 ## Autor
 
 Mantenido por `kermit79`.
