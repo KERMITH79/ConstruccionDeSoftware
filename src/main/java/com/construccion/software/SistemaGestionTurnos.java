@@ -73,6 +73,28 @@ public class SistemaGestionTurnos {
         return turno;
     }
 
+    /** Cancela un turno EN_ESPERA; lo retira de la fila pero lo conserva en el historial. */
+    public Turno cancelarTurno(String idTurno) {
+        Turno turno = buscarTurno(idTurno);
+        turno.cancelar();
+        return turno;
+    }
+
+    /** Todos los turnos registrados, sin importar su estado, en orden de secuencia. */
+    public List<Turno> consultarHistorial() {
+        return List.copyOf(turnos);
+    }
+
+    private Turno buscarTurno(String idTurno) {
+        if (idTurno == null || idTurno.isBlank()) {
+            throw new IllegalArgumentException("El id del turno es obligatorio");
+        }
+        return turnos.stream()
+                .filter(t -> t.getId().equals(idTurno.trim()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("El turno " + idTurno + " no existe"));
+    }
+
     private Ventanilla buscarVentanilla(String idVentanilla) {
         Ventanilla ventanilla = idVentanilla == null ? null : ventanillas.get(idVentanilla.trim());
         if (ventanilla == null) {
