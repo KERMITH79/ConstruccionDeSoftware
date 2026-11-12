@@ -103,13 +103,38 @@ class SistemaGestionTurnosTest {
         assertThrows(IllegalStateException.class, () -> sistema.asignarSiguiente("V02"));
 
         assertEquals(EstadoTurno.EN_ATENCION, t1.getEstado());
+        assertEquals(EstadoTurno.EN_ESPERA, t2.getEstado());
+        assertSame(t1, sistema.consultarVentanillas().get(1).getTurnoActual());
         assertEquals(List.of(t2), sistema.consultarFila());
+        assertEquals(List.of(t1, t2), sistema.consultarHistorial());
     }
 
     @Test
     void rechazaAsignarConFilaVaciaSinCambios() {
         assertThrows(IllegalStateException.class, () -> sistema.asignarSiguiente("V01"));
+
+        assertTrue(sistema.consultarFila().isEmpty());
+        assertTrue(sistema.consultarHistorial().isEmpty());
         assertTrue(sistema.consultarVentanillas().stream().allMatch(Ventanilla::estaLibre));
+        assertTrue(sistema.consultarVentanillas().stream()
+                .allMatch(ventanilla -> ventanilla.getTurnoActual() == null));
+    }
+
+    @Test
+    void rechazaAsignarSinTurnosPendientesSinAlterarEstadosExistentes() {
+        Turno enAtencion = sistema.registrarTurno();
+        Turno cancelado = sistema.registrarTurno();
+        sistema.asignarSiguiente("V01");
+        sistema.cancelarTurno(cancelado.getId());
+
+        assertThrows(IllegalStateException.class, () -> sistema.asignarSiguiente("V02"));
+
+        assertEquals(EstadoTurno.EN_ATENCION, enAtencion.getEstado());
+        assertEquals(EstadoTurno.CANCELADO, cancelado.getEstado());
+        assertSame(enAtencion, sistema.consultarVentanillas().get(0).getTurnoActual());
+        assertTrue(sistema.consultarVentanillas().get(1).estaLibre());
+        assertTrue(sistema.consultarFila().isEmpty());
+        assertEquals(List.of(enAtencion, cancelado), sistema.consultarHistorial());
     }
 
     @Test
@@ -136,16 +161,21 @@ class SistemaGestionTurnosTest {
     }
 
     @Test
-    void finalizarAtencionLiberaLaVentanillaYMarcaAtendido() {
+    void cicloRegistrarAsignarFinalizarYReasignarConservaEstados() {
         Turno t1 = sistema.registrarTurno();
         Turno t2 = sistema.registrarTurno();
-        sistema.asignarSiguiente("V02");
 
+        assertSame(t1, sistema.asignarSiguiente("V02"));
+        assertEquals(EstadoTurno.EN_ATENCION, t1.getEstado());
+        assertSame(t1, sistema.consultarVentanillas().get(1).getTurnoActual());
         assertSame(t1, sistema.finalizarAtencion("V02"));
-
         assertEquals(EstadoTurno.ATENDIDO, t1.getEstado());
         assertTrue(sistema.consultarVentanillas().get(1).estaLibre());
+
         assertSame(t2, sistema.asignarSiguiente("V02"));
+        assertEquals(EstadoTurno.EN_ATENCION, t2.getEstado());
+        assertSame(t2, sistema.consultarVentanillas().get(1).getTurnoActual());
+        assertEquals(List.of(t1, t2), sistema.consultarHistorial());
     }
 
     @Test
@@ -194,7 +224,21 @@ class SistemaGestionTurnosTest {
     }
 
     @Test
-    void cancelarTurnoEnAtencionAtendidoOCanceladoSeRechazaSinCambios() {
+    void cancelarTurnoEnAtencionSeRechazaSinCambios() {
+        Turno enAtencion = sistema.registrarTurno();
+        Turno enEspera = sistema.registrarTurno();
+        sistema.asignarSiguiente("V01");
+
+        assertThrows(IllegalStateException.class, () -> sistema.cancelarTurno(enAtencion.getId()));
+
+        assertEquals(EstadoTurno.EN_ATENCION, enAtencion.getEstado());
+        assertSame(enAtencion, sistema.consultarVentanillas().get(0).getTurnoActual());
+        assertEquals(List.of(enEspera), sistema.consultarFila());
+        assertEquals(List.of(enAtencion, enEspera), sistema.consultarHistorial());
+    }
+
+    @Test
+    void cancelarTurnoAtendidoOCanceladoSeRechazaSinCambios() {
         Turno enAtencion = sistema.registrarTurno();
         Turno atendido = sistema.registrarTurno();
         Turno cancelado = sistema.registrarTurno();
