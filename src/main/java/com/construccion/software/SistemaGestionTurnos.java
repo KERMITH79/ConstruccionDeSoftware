@@ -21,19 +21,9 @@ public class SistemaGestionTurnos {
     private final List<Turno> turnos = new ArrayList<>();
     private final Map<String, Ventanilla> ventanillas = new LinkedHashMap<>();
     private long ultimaSecuencia = 0;
-
-    public SistemaGestionTurnos() {
-        this(Clock.systemDefaultZone());
-    }
-
     /** Crea un sistema en memoria, conservando el reloj indicado. */
     public SistemaGestionTurnos(Clock reloj) {
         this(reloj, (PersistenciaTurnos) null);
-    }
-
-    /** Crea un sistema que recupera y guarda sus datos en el archivo indicado. */
-    public SistemaGestionTurnos(Path archivoPersistencia) {
-        this(Clock.systemDefaultZone(), new AlmacenamientoArchivoTurnos(archivoPersistencia));
     }
 
     /** Crea un sistema persistente con un reloj configurable. */
