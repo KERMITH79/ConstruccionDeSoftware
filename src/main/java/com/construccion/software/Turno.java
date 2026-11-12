@@ -11,7 +11,18 @@ public class Turno {
     private EstadoTurno estado;
     private String ventanillaAsignada;
 
+    /** Crea un turno nuevo, inicialmente en espera y sin ventanilla asignada. */
     public Turno(String id, long secuencia, LocalDateTime fechaHoraRegistro) {
+        this(id, secuencia, fechaHoraRegistro, EstadoTurno.EN_ESPERA, null);
+    }
+
+    /** Restaura un turno desde los datos recuperados de persistencia. */
+    Turno(
+            String id,
+            long secuencia,
+            LocalDateTime fechaHoraRegistro,
+            EstadoTurno estado,
+            String ventanillaAsignada) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("El id del turno es obligatorio");
         }
@@ -21,7 +32,8 @@ public class Turno {
         this.id = id;
         this.secuencia = secuencia;
         this.fechaHoraRegistro = Objects.requireNonNull(fechaHoraRegistro, "La fecha de registro es obligatoria");
-        this.estado = EstadoTurno.EN_ESPERA;
+        this.estado = Objects.requireNonNull(estado, "El estado del turno es obligatorio");
+        this.ventanillaAsignada = ventanillaAsignada;
     }
 
     public String getId() {
