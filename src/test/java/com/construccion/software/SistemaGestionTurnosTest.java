@@ -138,7 +138,6 @@ class SistemaGestionTurnosTest {
         assertEquals(EstadoTurno.EN_ATENCION, t1.getEstado());
         assertEquals(t1, sistema.consultarVentanillas().get(0).getTurnoActual());
     }
-<<<<<<< HEAD
 
     @Test
     void cancelarTurnoEnEsperaLoRetiraDeLaFilaYLoConservaEnHistorial() {
@@ -231,6 +230,4 @@ class SistemaGestionTurnosTest {
         sistema.registrarTurno();
         assertThrows(UnsupportedOperationException.class, () -> sistema.consultarHistorial().clear());
     }
-=======
->>>>>>> 2bc42a9ed31051bad8ed2cb79362667ee070d3d6
 }
