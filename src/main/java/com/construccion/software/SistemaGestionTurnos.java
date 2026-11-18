@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /** Coordina turnos, ventanillas y, opcionalmente, su persistencia local. */
@@ -21,6 +22,17 @@ public class SistemaGestionTurnos {
     private final List<Turno> turnos = new ArrayList<>();
     private final Map<String, Ventanilla> ventanillas = new LinkedHashMap<>();
     private long ultimaSecuencia = 0;
+
+    /** Crea un sistema en memoria usando el reloj del sistema. */
+    public SistemaGestionTurnos() {
+        this(Clock.systemDefaultZone(), (PersistenciaTurnos) null);
+    }
+
+    /** Crea un sistema persistente usando el reloj del sistema. */
+    public SistemaGestionTurnos(Path archivoPersistencia) {
+        this(Clock.systemDefaultZone(), archivoPersistencia);
+    }
+
     /** Crea un sistema en memoria, conservando el reloj indicado. */
     public SistemaGestionTurnos(Clock reloj) {
         this(reloj, (PersistenciaTurnos) null);
@@ -36,7 +48,7 @@ public class SistemaGestionTurnos {
      * Si la carga falla o contiene datos inconsistentes, el constructor falla y no guarda datos.
      */
     public SistemaGestionTurnos(Clock reloj, PersistenciaTurnos persistencia) {
-        this.reloj = reloj;
+        this.reloj = Objects.requireNonNull(reloj, "El reloj es obligatorio");
         this.persistencia = persistencia;
         Ventanilla.IDS_VALIDOS.forEach(id -> ventanillas.put(id, new Ventanilla(id)));
         if (persistencia != null) {
@@ -107,6 +119,11 @@ public class SistemaGestionTurnos {
     /** Cancela un turno EN_ESPERA; lo retira de la fila pero lo conserva en el historial. */
     public Turno cancelarTurno(String idTurno) {
         Turno turno = buscarTurno(idTurno);
+        if (turno.getEstado() != EstadoTurno.EN_ESPERA) {
+            throw new IllegalStateException(
+                    "No se puede cancelar el turno " + turno.getId()
+                            + ": está " + turno.getEstado() + " y debe estar " + EstadoTurno.EN_ESPERA);
+        }
         List<PersistenciaTurnos.Registro> candidato = snapshotPersistido();
         reemplazarRegistro(candidato, registroDe(turno, EstadoTurno.CANCELADO, null));
         guardar(candidato, "cancelar el turno");
