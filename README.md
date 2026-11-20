@@ -37,6 +37,10 @@ Los siguientes requisitos son criterios de calidad de producto seleccionados par
 
 Las reglas de negocio son los principios, condiciones, restricciones y políticas operativas que definen cómo debe funcionar una organización o proceso, independientemente de la tecnología que se utilice.
 
+## Pruebas unitarias
+
+Las pruebas JUnit 5 se ejecutan desde la raíz con `mvn test`. 
+
 ## Autor
 
 Mantenido por `kermit79`.
