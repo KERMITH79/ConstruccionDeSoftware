@@ -34,7 +34,7 @@ mvn test            # ejecuta las pruebas unitarias
 mvn compile exec:java   # inicia la aplicación
 ```
 
-Los turnos se guardan en `datos/turnos.dat` (relativo al directorio desde donde se ejecuta; ignorado por git).
+Los turnos se guardan en `datos/turnos.dat` (relativo al directorio desde donde se ejecuta; ignorado por git). Se puede cambiar con `-Dturnos.archivo=<ruta>`.
 Si el archivo está dañado o es inválido, la aplicación muestra el error y se cierra sin modificarlo.
 
 ## [Requisitos Funcionales](Analisis/ReglasDeNegocio.md)

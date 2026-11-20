@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -20,6 +21,11 @@ class MainTest {
 
     @TempDir
     Path directorio;
+
+    @AfterEach
+    void limpiarPropiedad() {
+        System.clearProperty(Main.PROPIEDAD_ARCHIVO);
+    }
 
     @Test
     void sinArchivoInicia() {
@@ -71,5 +77,24 @@ class MainTest {
         assertTrue(errores.get(0).contains("no fue modificado"));
         assertSame(null, vista.get());
         assertArrayEquals(corrupto, Files.readAllBytes(archivo));
+    }
+
+    @Test
+    void mainUsaElArchivoIndicadoPorPropiedadYArrancaSinSalir() {
+        Path archivo = directorio.resolve("turnos.dat");
+        System.setProperty(Main.PROPIEDAD_ARCHIVO, archivo.toString());
+
+        Main.main(new String[0]);
+
+        assertFalse(Files.exists(archivo));
+    }
+
+    @Test
+    void mensajesSeMuestranSinInterfazGrafica() {
+        SistemaGestionTurnos sistema = new SistemaGestionTurnos();
+        sistema.registrarTurno();
+
+        Main.abrirVista(sistema);
+        Main.mostrarError("error de prueba");
     }
 }
