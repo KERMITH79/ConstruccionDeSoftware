@@ -25,6 +25,18 @@ Las reglas completas de uso del agente están en [`CLAUDE.md`](./CLAUDE.md).
 - Git
 - Claude Code (opcional, para asistencia con el agente)
 
+## Ejecución y pruebas
+
+Requiere JDK 17 o superior y Maven.
+
+```
+mvn test            # ejecuta las pruebas unitarias
+mvn compile exec:java   # inicia la aplicación
+```
+
+Los turnos se guardan en `datos/turnos.dat` (relativo al directorio desde donde se ejecuta; ignorado por git). Se puede cambiar con `-Dturnos.archivo=<ruta>`.
+Si el archivo está dañado o es inválido, la aplicación muestra el error y se cierra sin modificarlo.
+
 ## [Requisitos Funcionales](Analisis/ReglasDeNegocio.md)
 
 Esta lista de requisitos funcionales nos ayudará a definir las funcionalidades del sistema.

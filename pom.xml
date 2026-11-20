@@ -17,6 +17,9 @@
         <junit.version>5.10.2</junit.version>
         <jacoco.version>0.8.12</jacoco.version>
         <surefire.version>3.2.5</surefire.version>
+        <exec.version>3.5.0</exec.version>
+        <jar.version>3.4.1</jar.version>
+        <main.class>com.construccion.software.Main</main.class>
     </properties>
 
     <dependencies>
@@ -34,6 +37,31 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${jar.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.version}</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
