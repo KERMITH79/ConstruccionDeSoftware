@@ -32,6 +32,7 @@ class PersistenciaTurnosTest {
         Turno atendido = sistema.registrarTurno();
         Turno enAtencion = sistema.registrarTurno();
         Turno cancelado = sistema.registrarTurno();
+        Turno enEspera = sistema.registrarTurno();
         sistema.asignarSiguiente("V01");
         sistema.finalizarAtencion("V01");
         sistema.asignarSiguiente("V02");
@@ -39,11 +40,13 @@ class PersistenciaTurnosTest {
 
         SistemaGestionTurnos reiniciado = new SistemaGestionTurnos(RELOJ, archivo);
 
-        assertEquals(List.of(EstadoTurno.ATENDIDO, EstadoTurno.EN_ATENCION, EstadoTurno.CANCELADO),
+        assertEquals(
+                List.of(EstadoTurno.ATENDIDO, EstadoTurno.EN_ATENCION, EstadoTurno.CANCELADO, EstadoTurno.EN_ESPERA),
                 reiniciado.consultarHistorial().stream().map(Turno::getEstado).toList());
         assertEquals("V01", reiniciado.consultarHistorial().get(0).getVentanillaAsignada());
         assertEquals(enAtencion.getId(), reiniciado.consultarVentanillas().get(1).getTurnoActual().getId());
-        assertEquals("T4", reiniciado.registrarTurno().getId());
+        assertEquals(List.of(enEspera.getId()), reiniciado.consultarFila().stream().map(Turno::getId).toList());
+        assertEquals("T5", reiniciado.registrarTurno().getId());
     }
 
     @Test
