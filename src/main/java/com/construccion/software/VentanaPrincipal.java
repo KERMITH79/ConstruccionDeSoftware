@@ -271,6 +271,7 @@ public class VentanaPrincipal extends JFrame {
         String detalle;
         if (ex instanceof UncheckedIOException) {
             detalle = "Error de almacenamiento local: " + ex.getMessage()
+                    + "\nCausa: " + ex.getCause().getMessage()
                     + "\nLos datos previos en memoria se conservaron sin cambios.";
         } else {
             detalle = ex.getMessage();
