@@ -62,7 +62,7 @@ public class SistemaGestionTurnos {
         Turno turno = new Turno("T" + secuencia, secuencia, LocalDateTime.now(reloj));
         List<PersistenciaTurnos.Registro> candidato = snapshotPersistido();
         candidato.add(registroDe(turno));
-        guardar(candidato, "registrar el turno");
+        guardar(candidato, "registrar el turno " + turno.getId());
         ultimaSecuencia = secuencia;
         turnos.add(turno);
         return turno;
@@ -95,7 +95,7 @@ public class SistemaGestionTurnos {
         Turno turno = fila.get(0);
         List<PersistenciaTurnos.Registro> candidato = snapshotPersistido();
         reemplazarRegistro(candidato, registroDe(turno, EstadoTurno.EN_ATENCION, ventanilla.getId()));
-        guardar(candidato, "asignar el turno");
+        guardar(candidato, "asignar el turno " + turno.getId() + " a la ventanilla " + ventanilla.getId());
         turno.iniciarAtencion(ventanilla.getId());
         ventanilla.ocupar(turno);
         return turno;
@@ -110,7 +110,7 @@ public class SistemaGestionTurnos {
         Turno turno = ventanilla.getTurnoActual();
         List<PersistenciaTurnos.Registro> candidato = snapshotPersistido();
         reemplazarRegistro(candidato, registroDe(turno, EstadoTurno.ATENDIDO, turno.getVentanillaAsignada()));
-        guardar(candidato, "finalizar la atención");
+        guardar(candidato, "finalizar la atención del turno " + turno.getId());
         ventanilla.liberar();
         turno.finalizar();
         return turno;
@@ -126,7 +126,7 @@ public class SistemaGestionTurnos {
         }
         List<PersistenciaTurnos.Registro> candidato = snapshotPersistido();
         reemplazarRegistro(candidato, registroDe(turno, EstadoTurno.CANCELADO, null));
-        guardar(candidato, "cancelar el turno");
+        guardar(candidato, "cancelar el turno " + turno.getId());
         turno.cancelar();
         return turno;
     }

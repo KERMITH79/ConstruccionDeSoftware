@@ -65,8 +65,10 @@ class PersistenciaTurnosTest {
         SistemaGestionTurnos sistema = new SistemaGestionTurnos(RELOJ, persistencia);
 
         persistencia.fallar = true;
-        assertThrows(UncheckedIOException.class, sistema::registrarTurno);
+        UncheckedIOException error = assertThrows(UncheckedIOException.class, sistema::registrarTurno);
 
+        assertTrue(error.getMessage().contains("turno T1"));
+        assertEquals("Fallo de escritura simulado", error.getCause().getMessage());
         assertTrue(sistema.consultarHistorial().isEmpty());
         persistencia.fallar = false;
         assertEquals("T1", sistema.registrarTurno().getId());
