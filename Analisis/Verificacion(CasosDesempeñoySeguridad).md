@@ -19,7 +19,7 @@
 
 Los siguientes casos son la cobertura automatizada actual y la evidencia visual que quedaría por capturar. **“Automatizado” no significa que se haya ejecutado en una interfaz**.
 
-| Caso | Escenario y resultado esperado | Prueba automatizada ejecutada | Estado | Evidencia visual |
+| Caso | Escenario y resultado esperado | Prueba automatizada ejecutada | Estado | Evidencia visual (Haga click en las imagenes para ampliar)|
 |---|---|---|---|---|
 | CV-01 | Registrar turnos con ID y secuencia únicos, en espera y al final de la fila. | `RegistroTurnosTest.idsYSecuenciasSonUnicos`; `turnoRegistradoQuedaEnEsperaSinVentanillaYConTimestamp` | PASS automatizado; interfaz pendiente | <a href="./Comprobacion%20CV/image-1.png"><img src="./Comprobacion%20CV/image-1.png" alt="CV-01: registrar turnos" width="460"></a> |
 | CV-02 | Consultar la fila en orden FIFO y excluir turnos que ya no están en espera. | `ColaFifoTest.consultarFilaDevuelveOrdenFifo`; `filaExcluyeTurnosQueYaEstanEnEspera` | PASS automatizado; interfaz pendiente | <a href="./Comprobacion%20CV/image-2.png"><img src="./Comprobacion%20CV/image-2.png" alt="CV-02: fila FIFO" width="460"></a> |
