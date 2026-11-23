@@ -42,11 +42,14 @@ public final class Main {
         return 0;
     }
 
-    /** Enlace con la vista principal; se reemplaza por la ventana Swing al integrar los issues de interfaz (#9, #10). */
+    /** Abre la ventana principal Swing; sin entorno gráfico escribe el resumen en consola. */
     static void abrirVista(SistemaGestionTurnos sistema) {
-        notificar("Gestión de turnos", "Sistema iniciado: " + sistema.consultarHistorial().size()
-                + " turno(s) registrado(s), " + sistema.consultarFila().size() + " en espera.",
-                JOptionPane.INFORMATION_MESSAGE);
+        if (GraphicsEnvironment.isHeadless()) {
+            System.out.println("Sistema iniciado: " + sistema.consultarHistorial().size()
+                    + " turno(s) registrado(s), " + sistema.consultarFila().size() + " en espera.");
+            return;
+        }
+        SwingUtilities.invokeLater(() -> new VentanaPrincipal(sistema).setVisible(true));
     }
 
     static void mostrarError(String mensaje) {
