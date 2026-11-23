@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +23,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -270,8 +268,9 @@ public class VentanaPrincipal extends JFrame {
     private void mostrarError(String contexto, RuntimeException ex) {
         String detalle;
         if (ex instanceof UncheckedIOException) {
+            String causa = ex.getCause() != null ? "\nCausa: " + ex.getCause().getMessage() : "";
             detalle = "Error de almacenamiento local: " + ex.getMessage()
-                    + "\nCausa: " + ex.getCause().getMessage()
+                    + causa
                     + "\nLos datos previos en memoria se conservaron sin cambios.";
         } else {
             detalle = ex.getMessage();
@@ -334,21 +333,5 @@ public class VentanaPrincipal extends JFrame {
             }
             return c;
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                SistemaGestionTurnos sistema = new SistemaGestionTurnos(Path.of("datos", "turnos.dat"));
-                new VentanaPrincipal(sistema).setVisible(true);
-            } catch (UncheckedIOException | IllegalStateException ex) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No fue posible iniciar el sistema porque los datos guardados están dañados o ilegibles:\n"
-                                + ex.getMessage() + "\n\nEl archivo existente no fue sobrescrito.",
-                        "Error crítico de persistencia (RD-03)",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        });
     }
 }
